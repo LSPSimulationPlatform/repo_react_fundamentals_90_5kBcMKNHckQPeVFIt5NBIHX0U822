@@ -1,54 +1,77 @@
-// Import React and useState hook for managing state in functional components
+// Import React library and useState hook for managing component state
 import React, { useState } from "react";
 
-// Import custom components from local files
-import MainPage from "./components/MainPage";         // Main menu page component
-import ProductCreate from "./components/ProductCreate"; // Page for creating a new product
-import ProductList from "./components/ProductList";     // Page for listing all products
+// Import child components used for rendering different pages
+import MainPage from "./components/MainPage";
+import ProductCreate from "./components/ProductCreate";
+import ProductList from "./components/ProductList";
+import ProductUpdate from "./components/ProductUpdate";
 
 // Define the main App component
 function App() {
-  // useState to keep track of the current page being displayed (default is "main")
+  // Declare state to track which page is currently active (main, create, list, update)
   const [currentPage, setCurrentPage] = useState("main");
 
-  // useState to store a list of all products created
+  // Declare state to store the list of products
   const [products, setProducts] = useState([]);
 
   // Function to add a new product to the products array
   const addProduct = (newProduct) => {
-    // Append the new product to the previous state array
-    setProducts((prev) => [...prev, newProduct]);
+    setProducts((prev) => [...prev, newProduct]); // Use spread operator to add to previous array
   };
 
-  // Define a variable to hold the content of the current page
+  // Define a function to update an existing product in the state
+  const updateProduct = (updatedProduct) => {
+    // Use the setProducts function to update the state
+    setProducts((prev) =>
+      // Map through the previous product list
+      prev.map((p) =>
+        // If the product code matches the updated product's code,
+        // replace it with the updated product object
+        p.productCode === updatedProduct.productCode ? updatedProduct : p
+      )
+    );
+  };
+
+
+  // Variable to hold the component to render based on currentPage
   let pageContent;
 
-  // Use a switch statement to render the appropriate page based on currentPage value
+  // Use switch statement to decide which component to show
   switch (currentPage) {
-    // If the page is "create", show the ProductCreate component
     case "create":
+      // Render ProductCreate component with props: addProduct function and navigation handler
       pageContent = (
-        // Pass addProduct function as onAddProduct, and setCurrentPage as onNavigate
         <ProductCreate onAddProduct={addProduct} onNavigate={setCurrentPage} />
       );
       break;
 
-    // If the page is "list", show the ProductList component
     case "list":
+      // Render ProductList component with props: products array and navigation handler
       pageContent = (
-        // Pass the products data and the navigation function as props
         <ProductList products={products} onNavigate={setCurrentPage} />
       );
       break;
 
-    // For any other value (including "main"), show the MainPage component
+    case "update":
+      // Render ProductUpdate component with props: products array, update function, and navigation handler
+      pageContent = (
+        <ProductUpdate
+          products={products}
+          onUpdateProduct={updateProduct}
+          onNavigate={setCurrentPage}
+        />
+      );
+      break;
+
     default:
+      // Render MainPage by default, passing navigation handler to choose which page to go to
       pageContent = <MainPage onSelectPage={setCurrentPage} />;
   }
 
-  // Render the selected page component inside a <div>
-  return (<div>{pageContent}</div>);
+  // Return the selected page component wrapped in a <div>
+  return <div>{pageContent}</div>;
 }
 
-// Export the App component as the default export
+// Export App component to be used elsewhere (e.g., index.js)
 export default App;
