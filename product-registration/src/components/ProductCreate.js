@@ -40,7 +40,7 @@ function ProductCreate({ onAddProduct, onNavigate}) {
     alert("Product added successfully!");
 
     // Navigate to the product list page
-    // onNavigate("list");
+    onNavigate("list");
 
     // Clear all input fields by resetting state to initial values
     setProductName("");

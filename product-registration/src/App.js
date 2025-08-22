@@ -1,48 +1,54 @@
-// Import React and the useState hook for state management
+// Import React and useState hook for managing state in functional components
 import React, { useState } from "react";
 
-// Import MainPage component to be used as the landing/menu page
-import MainPage from "./components/MainPage";
-
-// Import ProductCreate component to render the product creation form
-import ProductCreate from "./components/ProductCreate"; 
+// Import custom components from local files
+import MainPage from "./components/MainPage";         // Main menu page component
+import ProductCreate from "./components/ProductCreate"; // Page for creating a new product
+import ProductList from "./components/ProductList";     // Page for listing all products
 
 // Define the main App component
 function App() {
-  // Declare state to track the current active page. Initially set to "main"
+  // useState to keep track of the current page being displayed (default is "main")
   const [currentPage, setCurrentPage] = useState("main");
 
-  // Declare state to store a list of products. Starts as an empty array
+  // useState to store a list of all products created
   const [products, setProducts] = useState([]);
 
-  // Function to add a new product to the products list
+  // Function to add a new product to the products array
   const addProduct = (newProduct) => {
-    // Spread the previous product list and add the new product to it
+    // Append the new product to the previous state array
     setProducts((prev) => [...prev, newProduct]);
   };
 
-  // Declare a variable to store which component to render based on currentPage
+  // Define a variable to hold the content of the current page
   let pageContent;
 
-  // Use switch-case to decide what to display based on currentPage state
+  // Use a switch statement to render the appropriate page based on currentPage value
   switch (currentPage) {
+    // If the page is "create", show the ProductCreate component
     case "create":
-      // If currentPage is "create", render ProductCreate component
-      // Pass addProduct to handle product saving and setCurrentPage for navigation
       pageContent = (
+        // Pass addProduct function as onAddProduct, and setCurrentPage as onNavigate
         <ProductCreate onAddProduct={addProduct} onNavigate={setCurrentPage} />
       );
       break;
 
+    // If the page is "list", show the ProductList component
+    case "list":
+      pageContent = (
+        // Pass the products data and the navigation function as props
+        <ProductList products={products} onNavigate={setCurrentPage} />
+      );
+      break;
+
+    // For any other value (including "main"), show the MainPage component
     default:
-      // If no specific case matched (like "main"), render MainPage component
-      // Pass setCurrentPage to allow navigation from menu
       pageContent = <MainPage onSelectPage={setCurrentPage} />;
   }
 
-  // Render the selected page content inside a div
+  // Render the selected page component inside a <div>
   return (<div>{pageContent}</div>);
 }
 
-// Export the App component to be used in index.js or elsewhere
+// Export the App component as the default export
 export default App;
