@@ -57,10 +57,10 @@ function App() {
       {activePage === "books" && (
         selectedBook ? 
           <BookDetails book={selectedBook} onBorrow={borrowBook} onBack={() => setSelectedBook(null)} /> :
-          <BookList books={books} onViewDetails={setSelectedBook} />
+          <BookList books={books} onViewDetails={setSelectedBook} setActivePage={setActivePage} />
       )}
-      {activePage === "users" && <UserList />}
-      {activePage === "loans" && <UserLoan loans={loans} setLoans={setLoans} />}
+      {activePage === "users" && <UserList setActivePage={setActivePage} />}
+      {activePage === "loans" && <UserLoan loans={loans} setLoans={setLoans} setActivePage={setActivePage} />}
       {activePage === "create" && <BookCreate books={books} setBooks={setBooks} setActivePage={setActivePage} />}
     </div>
   );
